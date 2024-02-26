@@ -19,17 +19,23 @@ app.get("/",(req,res)=>{
 
 app.post("/translate-to-french", async (req, res) => {
     try {
-        
+
+        //checking if text is not present
         if(!req.body.text)
         {
             return res.status(400).send({ message: "text is required" });
         }
 
+        //detecting language of text
         const languageOfText=lngDetector.detect(req.body.text);
+
+        //checking if text is not in english
         if(languageOfText[0][0]!='english')
         {
             throw new Error("text is not in english");
         }
+
+        //translating
         const { text } = req.body;
         const translation = await translate(text,"fr") ;
         res.send({ "translation":translation }).json() ;
